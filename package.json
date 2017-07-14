@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "fs": "0.0.1-security",
-    "gm": "^1.23.0"
+    "gm": "^1.23.0",
+    "request": "^2.81.0"
   }
 }

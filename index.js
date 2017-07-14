@@ -1,17 +1,20 @@
 var gm = require('gm');
 var dir = __dirname + '/imgBig';
 var fs = require('fs');
+var request = require('request');
 
-// fs.readdir(dir, function(err, items)) {
-//     items.forEach(function(item) {
-//         gm(item)
-//             .resize(294, 194)
-//             .write(dir + '/' + item + '_resize.jpg', function(err){
-//             if (err) return console.dir(arguments)
-//                 console.log(this.outname + " created  ::  " + arguments[3])
-//             });
-//     }, this);
-// });
+var imgURL = 'http://drop.ndtv.com/TECH/product_database/images/622201751000PM_635_karbonn_aura_note_2.jpeg';
+
+var download = function(url, filename){
+    request.head(url, function(){
+        request(url).pipe(fs.createWriteStream(dir + '/' + filename));
+    });
+};
+
+var downloadImg = new Promise((resolve, reject) => {
+    download(imgURL, 'simple.jpg');
+    resolve();
+});
 
 var createFrontImg = new Promise((resolve, reject) => {
     var name = dir + '/resize.jpg';
@@ -22,7 +25,6 @@ var createFrontImg = new Promise((resolve, reject) => {
             resolve(this.outname);
         });
     });
-
 
 var createBackImg = new Promise((resolve, reject) => {
     var name = dir + '/resize_font.jpg';
@@ -36,12 +38,12 @@ var createBackImg = new Promise((resolve, reject) => {
         });
     });
 
-Promise.all([createFrontImg, createBackImg]).then((data) => {
+Promise.all([downloadImg, createFrontImg, createBackImg]).then((data) => {
     console.log('data', data);
     // Наложение уменьшенной картинки на фон
-        gm(data[1])
+        gm(data[2])
         .gravity('Center')
-        .composite(data[0])
+        .composite(data[1])
         .write(dir + '/resize_texture.jpg', function(err){
             if (err) return console.dir(arguments)
         });
