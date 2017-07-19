@@ -13,11 +13,14 @@ function download(url, dest) {
             file.on('finish', function(){
                 file.close(() => resolve(dest));
             })
-		});
+		}).on('error', function() {
+            fs.unlink(dest);
+        });
 	});
 }
 
-var createFrontImg = new Promise((resolve, reject) => {
+function createFrontImg() {
+    return new Promise((resolve, reject) => {
     var name = dir + '/resize.jpg';
         gm(dir + '/simple.jpg')
         .resize(294, 194)
@@ -26,22 +29,24 @@ var createFrontImg = new Promise((resolve, reject) => {
             resolve(this.outname);
         })
     });
+}
 
-var createBackImg = new Promise((resolve, reject) => {
+function createBackImg() {
+    return new Promise((resolve, reject) => {
     var name = dir + '/resize_font.jpg';
         gm(dir + '/simple.jpg')
         .resize(300, 200, "!")
         .blur(30, 20)
-        .autoOrient()
         .write(name, function(err){
             if (err)  console.dir(arguments);
             resolve(this.outname);
-        });
+        })
     });
+}
 
 download(imgURL, dir + '/simple.jpg')
 .then((resolve) => {
-    Promise.all([createFrontImg, createBackImg]).then((data) => {
+    Promise.all([createFrontImg(), createBackImg()]).then((data) => {
     console.log('data', data);
     // Наложение уменьшенной картинки на фон
         gm(data[1])
