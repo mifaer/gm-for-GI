@@ -13,6 +13,7 @@
     "colour-extractor": "^0.2.1",
     "fs": "0.0.1-security",
     "gm": "^1.23.0",
+    "md5": "^2.2.1",
     "request": "^2.81.0"
   }
 }

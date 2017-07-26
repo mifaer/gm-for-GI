@@ -3,6 +3,7 @@ var dir = __dirname + '/imgBig';
 var fs = require('fs');
 var ce = require('colour-extractor');
 var request = require('request');
+var md5 = require('md5');
 
 // var imgURL = 'http://drop.ndtv.com/TECH/product_database/images/622201751000PM_635_karbonn_aura_note_2.jpeg';
 // var imgURL = 'https://i.gadgets360cdn.com/large/miui9_main_1500964803951.jpg?output-quality=80';
@@ -12,9 +13,10 @@ var imgURL = 'https://i.gadgets360cdn.com/large/moleskine_smart_william_penn_150
 // var imgURL = 'http://drop.ndtv.com/TECH/product_database/images/742017125141PM_635_karbonn_k9_kavach_4g_gadgets360.jpeg';
 // var imgURL = 'https://i.gadgets360cdn.com/large/bingo_f1_f2_1500875226739.jpg?output-quality=80';
 
+var title = md5(imgURL);
 
 var params = {
-    title: 'ipgine4',
+    title: title,
     url: imgURL,
     blureBG:  true
 }
